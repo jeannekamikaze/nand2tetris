@@ -1,0 +1,31 @@
+/* ALU */
+CHIP  ALU {
+  IN x[16], y[16], zx, nx, zy, ny, f, no;
+  OUT out[16], zr, ng;
+  PARTS:
+  // Bits zx,nx are treated as the select bit to a 4-way multiplexer.
+  //       0, 0 -> x
+  //       0, 1 -> !x
+  //       1, 0 -> 0
+  //       1, 1 -> 11...1
+  Not16(in=x, out=notx);
+  Mux4Way16(a=x, b=notx, c[0..15]=false, d[0..15]=true, sel[1]=zx, sel[0]=nx, out=X);
+
+  // Same stuff for y.
+  Not16(in=y, out=noty);
+  Mux4Way16(a=y, b=noty, c[0..15]=false, d[0..15]=true, sel[1]=zy, sel[0]=ny, out=Y);
+
+  // Select sum or and based on f.
+  Add16(a=X, b=Y, out=sum);
+  And16(a=X, b=Y, out=and);
+  Mux16(a=and, b=sum, sel=f, out=F);
+
+  // Choose out or !out based on no.
+  // Also set the negative flag.
+  Not16(in=F, out=notF);
+  Mux16(a=F, b=notF, sel=no, out=out, out=output, out[15]=ng);
+
+  // Set the zero flag.
+  Or16Way(in=output, out=notzero);
+  Not(in=notzero, out=zr);
+}

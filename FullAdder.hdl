@@ -1,0 +1,9 @@
+/* FullAdder: Adds two bits with a carry. */
+CHIP FullAdder {
+  IN a, b, c;
+  OUT sum, carry;
+  PARTS:
+  HalfAdder(a=a, b=b, sum=s, carry=c1);
+  HalfAdder(a=c, b=s, sum=sum, carry=c2);
+  Or(a=c1, b=c2, out=carry);
+}
