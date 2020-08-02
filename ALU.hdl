@@ -3,7 +3,7 @@ CHIP  ALU {
   IN x[16], y[16], zx, nx, zy, ny, f, no;
   OUT out[16], zr, ng;
   PARTS:
-  // Bits zx,nx are treated as the select bit to a 4-way multiplexer.
+  // Bits zx,nx are treated as the select bits to a 4-way multiplexer.
   //       0, 0 -> x
   //       0, 1 -> !x
   //       1, 0 -> 0
